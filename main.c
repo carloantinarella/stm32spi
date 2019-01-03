@@ -1,5 +1,6 @@
 #include "main.h"
 
+
 #define DESELECT()      GPIOC->ODR |= (1<<2)
 #define SELECT()        GPIOC->ODR &= ~(1<<2)
 

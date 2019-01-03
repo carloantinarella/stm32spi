@@ -43,6 +43,7 @@ LFLAGS += -lgcc
 LFLAGS += -T$(LSCRIPT)
 
 C_SRC 	= ./main.c
+C_SRC	+= ./system_stm32f4xx.c
 AS_SRC 	= ./startup_stm32.s
 
 OBJS =  $(C_SRC:.c=.o)
