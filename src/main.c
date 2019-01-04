@@ -1,5 +1,7 @@
 #include "main.h"
 
+#include <stdint.h>
+#include "stm32f4xx.h"
 
 #define DESELECT()      GPIOC->ODR |= (1<<2)
 #define SELECT()        GPIOC->ODR &= ~(1<<2)

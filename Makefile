@@ -1,3 +1,6 @@
+BUILDDIR = build
+SRCDIR = src
+INCDIR = inc
 TARGET = main
 
 # Define the linker script location and chip architecture
@@ -31,6 +34,7 @@ CFLAGS += -g
 CFLAGS += -fmessage-length=0
 # Set system to ignore semihosted junk
 CFLAGS += --specs=nosys.specs
+CFLAGS += -I$(INCDIR)
 
 # Linker directives
 LSCRIPT = ./$(LD_SCRIPT)
@@ -42,10 +46,16 @@ LFLAGS += -nostdlib
 LFLAGS += -lgcc
 LFLAGS += -T$(LSCRIPT)
 
+VPATH = $(SRCDIR)
+
 C_SRC 	= ./main.c
 C_SRC	+= ./system_stm32f4xx.c
 AS_SRC 	= ./startup_stm32.s
 
+#C_SRC  = $(addprefix $(SRCDIR),$(C_SRC))
+#AS_SRC = $(addprefix $(SRCDIR),$(AS_SRC))
+
+#OBJS = $(addprefix $(BUILDDIR)/,$OBJS)
 OBJS =  $(C_SRC:.c=.o)
 OBJS += $(AS_SRC:.s=.o)
 
@@ -53,22 +63,25 @@ OBJS += $(AS_SRC:.s=.o)
 all: $(TARGET).bin
 
 %.o: %.s
-	$(CC) -x assembler-with-cpp $(ASFLAGS) $< -o $@
+	mkdir -p $(BUILDDIR)
+	$(CC) -x assembler-with-cpp $(ASFLAGS) $< -o $(BUILDDIR)/$@
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+	mkdir -p $(BUILDDIR)
+	$(CC) -c $(CFLAGS) $(INLCUDE) $< -o $(BUILDDIR)/$@
 
 $(TARGET).elf: $(OBJS)
-	$(CC) $^ $(LFLAGS) -o $@
+	$(CC) $(addprefix $(BUILDDIR)/,$^) $(LFLAGS) -o $(BUILDDIR)/$@
 
 $(TARGET).bin: $(TARGET).elf
-	$(OC) -S -O binary $< $@
-	$(OS) $<
+	$(OC) -S -O binary $(BUILDDIR)/$< $(BUILDDIR)/$@
+	$(OS) $(BUILDDIR)/$<
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS)
-	rm -f $(TARGET).elf
+	rm -rf $(BUILDDIR)
+#	rm -f $(OBJS)
+#	rm -f $(TARGET).elf
 
 
 
