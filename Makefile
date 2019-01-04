@@ -52,10 +52,6 @@ C_SRC 	= ./main.c
 C_SRC	+= ./system_stm32f4xx.c
 AS_SRC 	= ./startup_stm32.s
 
-#C_SRC  = $(addprefix $(SRCDIR),$(C_SRC))
-#AS_SRC = $(addprefix $(SRCDIR),$(AS_SRC))
-
-#OBJS = $(addprefix $(BUILDDIR)/,$OBJS)
 OBJS =  $(C_SRC:.c=.o)
 OBJS += $(AS_SRC:.s=.o)
 
@@ -80,8 +76,6 @@ $(TARGET).bin: $(TARGET).elf
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)
-#	rm -f $(OBJS)
-#	rm -f $(TARGET).elf
 
 
 
